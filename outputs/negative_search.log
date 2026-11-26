@@ -1,0 +1,11 @@
+=== negative search: post-quantum algorithms in the pinned tree ===
+pin: 0085a1ff885d6a446369cf73a4430f75af22be55
+[step] grep -ri ML-DSA/ML-KEM/SLH-DSA/Kyber/Dilithium/SPHINCS over src/ include/
+[step] result: zero matches above: no post-quantum algorithm code in src/ or include/
+[step] grep release-signing tooling over .github/workflows/
+/home/hatch/workspace/postfiatd-pin-0085a1f/.github/workflows/deploy.yml:              curl -1sLf 'https://dl.cloudsmith.io/public/caddy/stable/gpg.key' | gpg --dearmor -o /usr/share/keyrings/caddy-stable-archive-keyring.gpg
+/home/hatch/workspace/postfiatd-pin-0085a1f/.github/workflows/deploy.yml:              curl -1sLf 'https://dl.cloudsmith.io/public/caddy/stable/gpg.key' | gpg --dearmor -o /usr/share/keyrings/caddy-stable-archive-keyring.gpg
+[step] result: 2 matches above, both in deploy.yml, both importing the Caddy APT repository public key (gpg --dearmor into a keyring). Neither signs a postfiatd release. No cosign/sigstore/attest/sha256sum/checksum/SLSA step exists in any workflow: no release-signing step.
+[step] grep ML-KEM/ML-DSA over the peer TLS files
+[step] result: zero matches above: no ML-KEM/ML-DSA in the peer TLS files
+result: negative searches complete

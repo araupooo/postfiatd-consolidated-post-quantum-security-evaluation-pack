@@ -1,0 +1,95 @@
+== measurement structure check ==
+[step] benchmark-pq block present: ML-DSA-44: PASS
+[step] ML-DSA-44 signature length 2420 B: PASS
+[step] ML-DSA-44 public-key length 1312 B: PASS
+[step] benchmark-pq block present: ML-DSA-65: PASS
+[step] ML-DSA-65 signature length 3309 B: PASS
+[step] ML-DSA-65 public-key length 1952 B: PASS
+[step] benchmark-pq block present: ML-DSA-87: PASS
+[step] ML-DSA-87 signature length 4627 B: PASS
+[step] ML-DSA-87 public-key length 2592 B: PASS
+[step] benchmark-pq block present: SPHINCS+-SHA2-128s-simple: PASS
+[step] SPHINCS+-SHA2-128s-simple signature length 7856 B: PASS
+[step] SPHINCS+-SHA2-128s-simple public-key length 32 B: PASS
+[step] benchmark-pq block present: SPHINCS+-SHA2-128f-simple: PASS
+[step] SPHINCS+-SHA2-128f-simple signature length 17088 B: PASS
+[step] SPHINCS+-SHA2-128f-simple public-key length 32 B: PASS
+[step] benchmark-pq controls: valid verifies (7 blocks): PASS
+[step] benchmark-pq controls: tampered rejects (7 blocks): PASS
+[step] benchmark-pq 2048-byte payload block present: PASS
+[step] benchmark-pq 2048-byte SLH-DSA block present: PASS
+[step] benchmark-kem sizes line present: ML-KEM-512: PASS
+[step] ML-KEM-512 sizes exact pk=800 sk=1632 ct=768 ss=32: PASS
+[step] benchmark-kem RESULT line present: ML-KEM-512: PASS
+[step] benchmark-kem sizes line present: ML-KEM-768: PASS
+[step] ML-KEM-768 sizes exact pk=1184 sk=2400 ct=1088 ss=32: PASS
+[step] benchmark-kem RESULT line present: ML-KEM-768: PASS
+[step] benchmark-kem sizes line present: ML-KEM-1024: PASS
+[step] ML-KEM-1024 sizes exact pk=1568 sk=3168 ct=1568 ss=32: PASS
+[step] benchmark-kem RESULT line present: ML-KEM-1024: PASS
+[step] benchmark-kem implicit rejection 108/108: PASS
+[step] hybrid_bench RESULT line present: ML-KEM-512: PASS
+[step] ML-KEM-512 arithmetic client+server==total: PASS
+[step] hybrid_bench RESULT line present: ML-KEM-768: PASS
+[step] ML-KEM-768 arithmetic client+server==total: PASS
+[step] hybrid_bench RESULT line present: ML-KEM-1024: PASS
+[step] ML-KEM-1024 arithmetic client+server==total: PASS
+[step] hybrid_bench all-zero X25519 rejected: PASS
+[step] hybrid_bench shared secrets agree: PASS
+[step] hybrid_bench completed OK: PASS
+[step] dual-sig envelope 2484 B (64 Ed25519 + 2420 ML-DSA-44): PASS
+[step] dual-sig control C-1 PASS: PASS
+[step] dual-sig control C-2 PASS: PASS
+[step] dual-sig control C-3 PASS: PASS
+[step] dual-sig control C-4 PASS: PASS
+[step] dual-sig control C-5 PASS: PASS
+[step] dual-sig verify rate present: PASS
+[step] benchmark-classical Ed25519 sign/verify rates present: PASS
+[step] FIPS 205 name probe: SLH-DSA-SHA2-128s not registered: PASS
+[step] FIPS 205 name probe log byte-identical to vendored evidence: PASS
+CHECK OK
+== excerpt check (internal consistency) ==
+[step] pin field present (40-char SHA): PASS
+[step] 9 excerpts internally consistent: PASS
+CHECK OK (internal consistency; re-run with --pin to verify against a checkout)
+== digest verification ==
+./.github/workflows/ci.yml: OK
+./README.md: OK
+./data/risk_register.json: OK
+./data/roadmap.json: OK
+./data/scorecard.json: OK
+./data/source_excerpts.json: OK
+./docs/CLAIMS.md: OK
+./docs/FAILURE_MODES.md: OK
+./docs/REMEDIATION.md: OK
+./docs/REPRODUCTION.md: OK
+./docs/RISK_REGISTER.md: OK
+./docs/ROADMAP.md: OK
+./docs/SCORECARD.md: OK
+./docs/SOURCES.md: OK
+./docs/memos/01-protocol-signatures.md: OK
+./docs/memos/02-validator-manifests-key-handling.md: OK
+./docs/memos/03-peer-transport-tls.md: OK
+./docs/memos/04-release-signing.md: OK
+./docs/memos/05-amendment-governance.md: OK
+./harness/bench_hybrid.c: OK
+./harness/bench_kem.c: OK
+./harness/bench_sig.c: OK
+./harness/classical_speed.sh: OK
+./harness/environment.sh: OK
+./harness/hybrid_bench.c: OK
+./harness/run_benchmarks.sh: OK
+./outputs/benchmark-classical.log: OK
+./outputs/benchmark-kem.log: OK
+./outputs/benchmark-pq.log: OK
+./outputs/environment.txt: OK
+./outputs/hybrid_bench.log: OK
+./outputs/hybrid_dual_sig_bench.log: OK
+./outputs/negative_fips205_names.log: OK
+./outputs/negative_search.log: OK
+./reproduce.sh: OK
+./scripts/check_excerpts.py: OK
+./scripts/check_measurements.py: OK
+./scripts/negative_search.sh: OK
+./verify_digests.sh: OK
+REPRODUCE OK
