@@ -1,0 +1,232 @@
+{
+ "pack": "Consolidated Postfiatd Post-Quantum Security Evaluation Pack",
+ "pin": "0085a1ff885d6a446369cf73a4430f75af22be55",
+ "stages": [
+  {
+   "stage": "S0",
+   "window": "0-4 weeks",
+   "title": "Stop the bleeding: no protocol change, no new cryptography",
+   "items": [
+    {
+     "id": "S0-1",
+     "action": "Publish an Ed25519 signature and a SHA-256 checksum file with every GitHub release, plus a verifier script in the repo.",
+     "closes": [
+      "C-F01"
+     ],
+     "exit": "A release exists whose signature verifies with the published key; the upgrade docs point at the verifier."
+    },
+    {
+     "id": "S0-2",
+     "action": "Pin Docker images by digest (image@sha256:...) in deployment docs; stop directing operators to -latest tags.",
+     "closes": [
+      "C-F02"
+     ],
+     "exit": "No deployment doc references a mutable -latest tag."
+    },
+    {
+     "id": "S0-3",
+     "action": "Require authentication on /api/tasks (or strip the endpoint for anonymous callers); return 401/403, not 200, for anonymous reads.",
+     "closes": [
+      "C-C01",
+      "C-C02"
+     ],
+     "exit": "Anonymous GET /api/tasks returns 401/403; authenticated reads unchanged."
+    },
+    {
+     "id": "S0-4",
+     "action": "Set an explicit TLS version floor (TLS 1.2 minimum) and an explicit TLS 1.3 ciphersuite list for the peer port; pass the operator ssl_ciphers list to the peer listener.",
+     "closes": [
+      "C-G03",
+      "C-G04"
+     ],
+     "exit": "Peer TLS policy is written down and enforced by the context, not by OpenSSL defaults."
+    },
+    {
+     "id": "S0-5",
+     "action": "Correct the quorum comment in ValidatorList.cpp: state that the pi+pj < .33*ni bound holds only at zero Byzantine faults.",
+     "closes": [
+      "C-D01"
+     ],
+     "exit": "Comment text matches Theorem 8; the correction is reviewed."
+    },
+    {
+     "id": "S0-6",
+     "action": "Publish /robots.txt; return a real 404 for unknown /api/* paths; document API rate limits.",
+     "closes": [
+      "C-C04",
+      "C-C05",
+      "C-C06"
+     ],
+     "exit": "Probes P-01..P-06 re-run: shell/robots/404 behavior as documented."
+    }
+   ],
+   "note": "S0 closes the highest-exploitability findings first. Nothing in S0 needs a new algorithm, a fork, or an amendment."
+  },
+  {
+   "stage": "S1",
+   "window": "1-3 months",
+   "title": "Hybrid protection on the two exposed paths: releases and peer transport",
+   "items": [
+    {
+     "id": "S1-1",
+     "action": "Ship the PFQS v1 hybrid release envelope (8-byte header + 64 B Ed25519 + 2,420 B ML-DSA-44 = 2,492 B, AND-verification, exact-length check) alongside the S0 Ed25519 signature.",
+     "closes": [
+      "C-F04",
+      "C-F06"
+     ],
+     "exit": "A release carries a PFQS v1 envelope that verifies at 5,051.9/s and rejects stripped halves (controls C-4/C-5)."
+    },
+    {
+     "id": "S1-2",
+     "action": "Publish the release-key rotation procedure (key generation, publication, revocation, rotation cadence) and name the key custodian role.",
+     "closes": [
+      "C-F09"
+     ],
+     "exit": "Rotation procedure exists in the repo and has been exercised once on a test release."
+    },
+    {
+     "id": "S1-3",
+     "action": "Add a signed manifest sequence number to releases (rollback protection) and enforce monotonic sequence on upgrade.",
+     "closes": [
+      "C-F03"
+     ],
+     "exit": "An operator cannot be rolled back to an older signed release without an explicit override."
+    },
+    {
+     "id": "S1-4",
+     "action": "Implement the hybrid KEM peer handshake (H-1 wire: 3-byte header + 32 B X25519 pubkey + ML-KEM ciphertext; 803/1,123/1,603 B) behind a testnet flag.",
+     "closes": [
+      "C-G06",
+      "C-B01"
+     ],
+     "exit": "Two testnet peers complete a hybrid handshake; measured totals match this pack (170.17/183.13/206.37 us)."
+    }
+   ],
+   "note": "S1 is the first stage that ships post-quantum cryptography. The hybrid (classical + PQ, AND-verification) shape means a break in either half alone does not break the system."
+  },
+  {
+   "stage": "S2",
+   "window": "3-6 months",
+   "title": "Governance observability and PQ validation signatures",
+   "items": [
+    {
+     "id": "S2-1",
+     "action": "Make per-amendment vote counts publicly readable (or enable PF_ValidatorVoteTracking and publish its output); a vote must be observable to be auditable.",
+     "closes": [
+      "C-E01",
+      "C-E02"
+     ],
+     "exit": "The public feature RPC (or a published tracker) shows count/validations/threshold per amendment."
+    },
+    {
+     "id": "S2-2",
+     "action": "Design and testnet-gate ML-DSA validation signatures for validator manifests (dual-signed validations during transition; secp256k1 retained until the network migrates).",
+     "closes": [
+      "C-A06",
+      "C-A01"
+     ],
+     "exit": "A testnet validator publishes a dual-signed validation that verifies under both schemes."
+    },
+    {
+     "id": "S2-3",
+     "action": "Allow TLS 1.3 in the outbound HTTPS client (validator-site and exclusion-list fetches).",
+     "closes": [
+      "C-G05"
+     ],
+     "exit": "Outbound fetches negotiate TLS 1.3 where the server offers it."
+    }
+   ],
+   "note": "S2 turns the two observability gaps (votes, validations) from findings into operated features."
+  },
+  {
+   "stage": "S3",
+   "window": "6-12 months",
+   "title": "PQ in the TLS stack and long-lived signatures",
+   "items": [
+    {
+     "id": "S3-1",
+     "action": "Add ML-KEM to the TLS stack via an OpenSSL provider (open decision D-02: provider choice) and negotiate hybrid ciphersuites on the peer port.",
+     "closes": [
+      "C-G06",
+      "C-B06"
+     ],
+     "exit": "Peer TLS negotiates a hybrid key exchange on testnet; the X-Wing all-zero check is enforced in the combiner."
+    },
+    {
+     "id": "S3-2",
+     "action": "Evaluate SLH-DSA-128f for long-lived release signatures (stateless, hash-based; 17,088 B, verify 897.5/s) as a second PQ half for archival releases.",
+     "closes": [
+      "C-F05",
+      "C-A03"
+     ],
+     "exit": "A dated decision record: SLH-DSA adopted or rejected for archival releases, with the measured costs attached."
+    },
+    {
+     "id": "S3-3",
+     "action": "Apply the FIPS 203 section 7.3 length check in the application layer wherever ML-KEM ciphertexts are accepted.",
+     "closes": [
+      "C-B10",
+      "C-B02"
+     ],
+     "exit": "Invalid-length ciphertexts are rejected with an explicit error before decapsulation."
+    }
+   ],
+   "note": "S3 depends on an upstream OpenSSL provider with ML-KEM support; if none is available, the S1 hybrid handshake stays the transport protection and S3 is re-planned."
+  },
+  {
+   "stage": "S4",
+   "window": "mainnet gate",
+   "title": "Mainnet readiness: close the governance and quorum gates",
+   "items": [
+    {
+     "id": "S4-1",
+     "action": "Decide the 67% -> 80% quorum revert explicitly and record the decision; do not go to mainnet on an undecided quorum.",
+     "closes": [
+      "C-C03",
+      "C-D02"
+     ],
+     "exit": "A dated decision record names the mainnet quorum and the evidence for it."
+    },
+    {
+     "id": "S4-2",
+     "action": "Complete the PQ migration on all five surfaces (scorecard >= 4 on every surface) before mainnet; re-run this pack's benchmarks on the migration build.",
+     "closes": [
+      "C-A01",
+      "C-B01",
+      "C-G01",
+      "C-F01"
+     ],
+     "exit": "Scorecard re-issued with every surface >= 4 and fresh measurements attached."
+    }
+   ],
+   "note": "S4 is a gate, not a workstream: mainnet does not proceed while any surface scores below 4."
+  }
+ ],
+ "open_decisions": [
+  {
+   "id": "D-01",
+   "text": "Release-key distribution and rotation procedure: not specified in this pack; S1-2 must define it. Until then, PFQS v1 envelopes are verifiable but their keys have no published lifecycle.",
+   "status": "open"
+  },
+  {
+   "id": "D-02",
+   "text": "ML-KEM TLS provider choice (which OpenSSL provider supplies ML-KEM, and which hybrid ciphersuites are negotiated): not specified; S3-1 must choose. The S1 hybrid handshake does not depend on it.",
+   "status": "open"
+  },
+  {
+   "id": "D-03",
+   "text": "Signed manifest sequence / rollback field: PFQS v1 has no timestamp or sequence field by design; rollback protection is a separate S1-3 manifest field, not part of the envelope.",
+   "status": "open"
+  },
+  {
+   "id": "D-04",
+   "text": "SLH-DSA adoption for archival releases: deferred to S3-2 with measured costs attached; ML-DSA-44 is the only PQ half in PFQS v1.",
+   "status": "open"
+  },
+  {
+   "id": "D-05",
+   "text": "Mainnet quorum (67% vs 80%): undecided; S4-1 is the decision gate. The 67% comment bound (C-D01) is wrong regardless of which quorum is chosen.",
+   "status": "open"
+  }
+ ]
+}

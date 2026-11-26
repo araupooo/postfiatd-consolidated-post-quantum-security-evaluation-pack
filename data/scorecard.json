@@ -1,0 +1,79 @@
+{
+ "pack": "Consolidated Postfiatd Post-Quantum Security Evaluation Pack",
+ "pin": "0085a1ff885d6a446369cf73a4430f75af22be55",
+ "scale": "0-5 per surface (0 = no protection and no design; 5 = migrated, measured, and operated). Dimensions: measurement completeness, in-tree support, migration design, operational readiness. Overall is the mean of the five surface scores.",
+ "surfaces": [
+  {
+   "surface": "protocol-signatures",
+   "score": 2,
+   "measurement": 5,
+   "in_tree_support": 0,
+   "migration_design": 4,
+   "operational_readiness": 1,
+   "rationale": "Benchmarks are complete and re-run fresh in this pack (ML-DSA-44 verify 27,521.9/s; SLH-DSA-128f 897.5/s; sizes verified against FIPS 204/205 and liboqs headers). Zero PQ code exists in the pinned tree; the dual-signature migration design (PFQS v1 envelope, docs/memos/04-release-signing.md) is fully specified, but no operator procedure exists yet.",
+   "blocking": [
+    "C-A01",
+    "C-A06"
+   ]
+  },
+  {
+   "surface": "validator-manifests-key-handling",
+   "score": 1,
+   "measurement": 4,
+   "in_tree_support": 0,
+   "migration_design": 2,
+   "operational_readiness": 1,
+   "rationale": "Validation signatures are secp256k1-only by an explicit handshake check (Handshake.cpp:294); the single verification entry point makes extension easy but is also a single point of failure. No PQ validation format has been designed; key handling for PQ keys does not exist.",
+   "blocking": [
+    "C-A06",
+    "C-A05"
+   ]
+  },
+  {
+   "surface": "peer-transport-tls",
+   "score": 1,
+   "measurement": 5,
+   "in_tree_support": 0,
+   "migration_design": 4,
+   "operational_readiness": 1,
+   "rationale": "Peer TLS is anonymous by code (verify_none both ends) and the hybrid KEM design is fully specified with a byte-exact wire format and fresh measurements (hybrid handshake 170.17/183.13/206.37 us). No ML-KEM exists in the TLS stack and no version floor is set, so nothing can be switched on today.",
+   "blocking": [
+    "C-G01",
+    "C-G06",
+    "C-G03"
+   ]
+  },
+  {
+   "surface": "release-signing",
+   "score": 0,
+   "measurement": 5,
+   "in_tree_support": 0,
+   "migration_design": 4,
+   "operational_readiness": 0,
+   "rationale": "The worst surface: releases and images are published unsigned under mutable tags, with signing explicitly deferred. Measurement is complete and the PFQS v1 hybrid envelope (2,492 B, verify 5,051.9/s) is fully specified, but there are no keys, no rotation procedure, and no rollback protection. Nothing here is operated at all.",
+   "blocking": [
+    "C-F01",
+    "C-F02",
+    "C-F09",
+    "C-F03"
+   ]
+  },
+  {
+   "surface": "amendment-governance",
+   "score": 2,
+   "measurement": 5,
+   "in_tree_support": 3,
+   "migration_design": 2,
+   "operational_readiness": 2,
+   "rationale": "The best surface: the mechanism exists, is measured live (101 amendments, 64 enabled / 37 disabled; thresholds 204/256 pre-fix and 67/100 post-fix verified in-tree), and the lifecycle model is simulated. The gap is observability, not mechanism: vote counts are admin-only and the vote-tracking amendment is itself disabled.",
+   "blocking": [
+    "C-E01",
+    "C-E02"
+   ]
+  }
+ ],
+ "overall": 1.2,
+ "overall_note": "Mean of the five surface scores (2+1+1+0+2)/5 = 1.2. The program is measurement-complete and migration-not-started: every number needed to plan the migration has been measured, but no surface has any PQ protection in production.",
+ "single_most_valuable_fix": "Stage S0 release signing (Ed25519 signature + SHA-256 checksum file + verifier script on every release, images pinned by digest). It closes the two highest-exploitability findings (C-F01, C-F02) at near-zero cost and no protocol change, and it is the prerequisite for every later hybrid stage: without signed releases, a signed hybrid envelope has nothing trustworthy to attach to.",
+ "second_most_valuable_fix": "Authenticate /api/tasks (C-C01): a one-line authorization check on a public endpoint that currently returns task JSON to any unauthenticated caller."
+}

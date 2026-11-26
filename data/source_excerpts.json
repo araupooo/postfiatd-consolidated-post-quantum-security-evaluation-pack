@@ -1,0 +1,285 @@
+{
+ "pin": "0085a1ff885d6a446369cf73a4430f75af22be55",
+ "pin_note": "Excerpts were copied verbatim from the pinned postfiatd checkout at the stated commit. scripts/check_excerpts.py re-verifies each excerpt against a checkout of the same commit when --pin is given; without --pin it checks internal consistency only.",
+ "excerpts": [
+  {
+   "id": "E-01",
+   "file": "src/xrpld/overlay/detail/ConnectAttempt.cpp",
+   "lines": [
+    {
+     "line": 173,
+     "text": ""
+    },
+    {
+     "line": 174,
+     "text": "    setTimer();"
+    },
+    {
+     "line": 175,
+     "text": "    stream_.set_verify_mode(boost::asio::ssl::verify_none);"
+    },
+    {
+     "line": 176,
+     "text": "    stream_.async_handshake("
+    },
+    {
+     "line": 177,
+     "text": "        boost::asio::ssl::stream_base::client,"
+    }
+   ],
+   "note": "Outgoing peer TLS handshake sets verify_none: peer identity is not established by TLS."
+  },
+  {
+   "id": "E-02",
+   "file": "src/libxrpl/basics/make_SSLContext.cpp",
+   "lines": [
+    {
+     "line": 389,
+     "text": "    // VFALCO NOTE, It seems the WebSocket context never has"
+    },
+    {
+     "line": 390,
+     "text": "    // set_verify_mode called, for either setting of WEBSOCKET_SECURE"
+    },
+    {
+     "line": 391,
+     "text": "    context->set_verify_mode(boost::asio::ssl::verify_none);"
+    },
+    {
+     "line": 392,
+     "text": "    return context;"
+    }
+   ],
+   "note": "Shared peer TLS context sets verify_none."
+  },
+  {
+   "id": "E-03",
+   "file": "src/libxrpl/basics/make_SSLContext.cpp",
+   "lines": [
+    {
+     "line": 64,
+     "text": "            default DH parameters and update defaultDH  accordingly."
+    },
+    {
+     "line": 65,
+     "text": " * */"
+    },
+    {
+     "line": 66,
+     "text": "int defaultRSAKeyBits = 2048;"
+    },
+    {
+     "line": 67,
+     "text": ""
+    },
+    {
+     "line": 68,
+     "text": "/** The default DH parameters."
+    }
+   ],
+   "note": "Default strength of the ephemeral self-signed RSA certificate: 2048 bits."
+  },
+  {
+   "id": "E-04",
+   "file": "src/libxrpl/basics/make_SSLContext.cpp",
+   "lines": [
+    {
+     "line": 102,
+     "text": "          config file."
+    },
+    {
+     "line": 103,
+     "text": " */"
+    },
+    {
+     "line": 104,
+     "text": "std::string const defaultCipherList = \"TLSv1.2:!CBC:!DSS:!PSK:!eNULL:!aNULL\";"
+    },
+    {
+     "line": 105,
+     "text": ""
+    },
+    {
+     "line": 106,
+     "text": "static void"
+    }
+   ],
+   "note": "Default peer cipher list governs TLS 1.2 only."
+  },
+  {
+   "id": "E-05",
+   "file": "src/libxrpl/basics/make_SSLContext.cpp",
+   "lines": [
+    {
+     "line": 350,
+     "text": "        boost::asio::ssl::context::sslv23);"
+    },
+    {
+     "line": 351,
+     "text": ""
+    },
+    {
+     "line": 352,
+     "text": "    c->set_options("
+    },
+    {
+     "line": 353,
+     "text": "        boost::asio::ssl::context::default_workarounds |"
+    },
+    {
+     "line": 354,
+     "text": "        boost::asio::ssl::context::no_sslv2 |"
+    },
+    {
+     "line": 355,
+     "text": "        boost::asio::ssl::context::no_sslv3 |"
+    },
+    {
+     "line": 356,
+     "text": "        boost::asio::ssl::context::no_tlsv1 |"
+    },
+    {
+     "line": 357,
+     "text": "        boost::asio::ssl::context::no_tlsv1_1 |"
+    },
+    {
+     "line": 358,
+     "text": "        boost::asio::ssl::context::single_dh_use |"
+    }
+   ],
+   "note": "Only SSLv2/SSLv3/TLS 1.0/TLS 1.1 disabled; no min/max TLS version is set."
+  },
+  {
+   "id": "E-06",
+   "file": "src/xrpld/overlay/detail/Handshake.cpp",
+   "lines": [
+    {
+     "line": 292,
+     "text": "            if (pk)"
+    },
+    {
+     "line": 293,
+     "text": "            {"
+    },
+    {
+     "line": 294,
+     "text": "                if (publicKeyType(*pk) != KeyType::secp256k1)"
+    },
+    {
+     "line": 295,
+     "text": "                    throw std::runtime_error(\"Unsupported public key type\");"
+    },
+    {
+     "line": 296,
+     "text": ""
+    }
+   ],
+   "note": "Peer handshake rejects any node public key that is not secp256k1."
+  },
+  {
+   "id": "E-07",
+   "file": "src/xrpld/app/misc/detail/ValidatorList.cpp",
+   "lines": [
+    {
+     "line": 1925,
+     "text": "    //"
+    },
+    {
+     "line": 1926,
+     "text": "    // Oi,j > nj/2 + ni \u2212 qi + ti,j"
+    },
+    {
+     "line": 1927,
+     "text": "    // ni - pi > (ni - pi + pj)/2 + ni \u2212 .67*ni + .33*ni"
+    },
+    {
+     "line": 1928,
+     "text": "    // pi + pj < .33*ni"
+    },
+    {
+     "line": 1929,
+     "text": "    //"
+    }
+   ],
+   "note": "Quorum comment: the pi+pj < .33*ni bound; holds only at zero Byzantine faults."
+  },
+  {
+   "id": "E-08",
+   "file": "include/xrpl/protocol/SystemParameters.h",
+   "lines": [
+    {
+     "line": 83,
+     "text": "constexpr std::ratio<204, 256> preFixAmendmentMajorityCalcThreshold;"
+    },
+    {
+     "line": 84,
+     "text": ""
+    },
+    {
+     "line": 85,
+     "text": "constexpr std::ratio<67, 100> postFixAmendmentMajorityCalcThreshold;"
+    },
+    {
+     "line": 86,
+     "text": ""
+    },
+    {
+     "line": 87,
+     "text": "/** The minimum amount of time an amendment must hold a majority */"
+    },
+    {
+     "line": 88,
+     "text": "constexpr std::chrono::seconds const defaultAmendmentMajorityTime = std::chrono::weeks{2};"
+    }
+   ],
+   "note": "Pre-fix majority 204/256, post-fix 67/100, majority hold 2 weeks."
+  },
+  {
+   "id": "E-09",
+   "file": "src/xrpld/app/misc/detail/AmendmentTable.cpp",
+   "lines": [
+    {
+     "line": 1019,
+     "text": "    if (!fs.enabled && lastVote_ && isAdmin)"
+    },
+    {
+     "line": 1020,
+     "text": "    {"
+    },
+    {
+     "line": 1021,
+     "text": "        auto const votesTotal = lastVote_->trustedValidations();"
+    },
+    {
+     "line": 1022,
+     "text": "        auto const votesNeeded = lastVote_->threshold();"
+    },
+    {
+     "line": 1023,
+     "text": "        auto const votesFor = lastVote_->votes(id);"
+    },
+    {
+     "line": 1024,
+     "text": ""
+    },
+    {
+     "line": 1025,
+     "text": "        v[jss::count] = votesFor;"
+    },
+    {
+     "line": 1026,
+     "text": "        v[jss::validations] = votesTotal;"
+    },
+    {
+     "line": 1027,
+     "text": ""
+    },
+    {
+     "line": 1028,
+     "text": "        if (votesNeeded)"
+    }
+   ],
+   "note": "Per-amendment vote counts (count/validations/threshold) are emitted only when isAdmin is true."
+  }
+ ]
+}
